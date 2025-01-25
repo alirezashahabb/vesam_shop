@@ -30,16 +30,29 @@ class _BasketScreenState extends State<BasketScreen> {
 
   @override
   void initState() {
-    sub = getLinksStream().listen((event) {
-      if (event != null && event == 'vesam://success_payment') {
-        showCustomAlert(context, 'پرداخت با موفقیت انجام شد');
-        Navigator.pop(context);
-        BlocProvider.of<BasketBloc>(context).add(
-          GetBasketInitEvent(),
-        );
-        BlocProvider.of<ProfileBloc>(context).add(UserPaymentInitEvent());
-      }
-    });
+    sub = getLinksStream().listen(
+      (event) {
+        if (event != null && event == 'vesam://success_payment') {
+          showCustomAlert(context, 'پرداخت با موفقیت انجام شد');
+          Navigator.pop(context);
+          BlocProvider.of<BasketBloc>(context).add(
+            GetBasketInitEvent(),
+          );
+          BlocProvider.of<ProfileBloc>(context).add(UserPaymentInitEvent());
+        }
+        if (event != null && event == 'vesam://error_payment') {
+          showCustomAlert(
+            context,
+            'پرداخت با خطا  مواجعه شد',
+            AlertType.error,
+          );
+          Navigator.pop(context);
+          BlocProvider.of<BasketBloc>(context).add(
+            GetBasketInitEvent(),
+          );
+        }
+      },
+    );
     super.initState();
   }
 
